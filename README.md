@@ -1,6 +1,8 @@
 # Rust server that runs inside a Docker container
-
----
+[![Docker Automated build](https://img.shields.io/docker/automated/didstopia/rust-server.svg)](https://hub.docker.com/r/didstopia/rust-server/)
+[![Docker build status](https://img.shields.io/docker/build/didstopia/rust-server.svg)](https://hub.docker.com/r/didstopia/rust-server/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/didstopia/rust-server.svg)](https://hub.docker.com/r/didstopia/rust-server/)
+[![Docker stars](https://img.shields.io/docker/stars/didstopia/rust-server.svg)](https://hub.docker.com/r/didstopia/rust-server)
 
 **DISCLAIMER:**
 ```
@@ -8,8 +10,6 @@ Cracked or pirated versions of Rust are not supported in any way, shape or form.
 ```
 
 ---
-
-[![Install on DigitalOcean](http://installer.71m.us/button.svg)](http://installer.71m.us/install?url=https://github.com/didstopia/rust-server)
 
 **TUTORIAL**: We've written a guide on how to use this image [here](http://rust.didscraft.com/rust-server-on-linux-using-docker/).
 
@@ -26,6 +26,7 @@ The following environment variables are available:
 ```
 RUST_SERVER_STARTUP_ARGUMENTS (DEFAULT: "-batchmode -load -nographics +server.secure 1")
 RUST_SERVER_IDENTITY (DEFAULT: "docker" - Mainly used for the name of the save directory)
+RUST_SERVER_PORT (DEFAULT: "" - Rust server port 28015 if left blank or numeric value)
 RUST_SERVER_SEED (DEFAULT: "12345" - The server map seed, must be an integer)
 RUST_SERVER_WORLDSIZE (DEFAULT: "3500" - The map size, must be an integer)
 RUST_SERVER_NAME (DEFAULT: "Rust Server [DOCKER]" - The publicly visible server name)
@@ -37,6 +38,7 @@ RUST_SERVER_SAVE_INTERVAL (DEFAULT: "600" - Amount of seconds between automatic 
 RUST_RCON_WEB (DEFAULT "1" - Set to 1 or 0 to enable or disable the web-based RCON server)
 RUST_RCON_PORT (DEFAULT: "28016" - RCON server port)
 RUST_RCON_PASSWORD (DEFAULT: "docker" - RCON server password, please change this!)
+RUST_APP_PORT (DEFAULT: "28082" - Rust+ companion app port)
 RUST_BRANCH (DEFAULT: Not set - Sets the branch argument to use, eg. set to "-beta prerelease" for the prerelease branch)
 RUST_UPDATE_CHECKING (DEFAULT: "0" - Set to 1 to enable fully automatic update checking, notifying players and restarting to install updates)
 RUST_UPDATE_BRANCH (DEFAULT: "public" - Set to match the branch that you want to use for updating, ie. "prerelease" or "public", but do not specify arguments like "-beta")
@@ -56,7 +58,17 @@ When the server starts up or restarts, it will move old logs to `logs/archive/`.
 We recently added a small application, called *rcon*, that can both send and receive messages to the server, much like the console on the Windows version, but this happens to use RCON (webrcon).
 To use it, simply run the following on the host: `docker exec rust-server rcon say Hello World`, substituting *rust-server* for your own container name.
 
+# Rust+ companion app support
+
+The image sets up `app.port` to `28082` by default, but you can optionally override this with the `RUST_APP_PORT` environment variable.  
+If you need to set additional options, such as `app.listenip` or `app.publicip`, you can supply these to `RUST_SERVER_STARTUP_ARGUMENTS` environment variable, but be careful to also include the default values.  
+More information on the Rust+ companion app integration can be found [here](https://wiki.facepunch.com/rust/rust-companion-server).
+
+# Troubleshooting
+
+  - If the server exits by itself after seemingly starting up fine, make sure the Docker VM has at least 4GB of RAM.
+  - If you can connect to the RCON web UI, but not the game itself, make sure you've exposed port 28015 as UDP, not TCP.
+
 # Anything else
 
 If you need help, have questions or bug submissions, feel free to contact me **@Dids** on Twitter, and on the *Rust Server Owners* Slack community.
-
